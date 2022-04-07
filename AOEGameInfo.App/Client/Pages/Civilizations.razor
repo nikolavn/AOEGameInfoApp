@@ -1,0 +1,47 @@
+﻿@page "/civilizationslist"
+@using AOEGameInfo.App.Shared
+@inject HttpClient Http
+
+<PageTitle>Civilizations</PageTitle>
+
+<h3>Civilizations</h3>
+
+@if (civlizations == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Introduced In</th>
+                <th>Army Type</th>
+                <th>Team Bonus</th>
+                <th>Civilization Bonus</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var civilization in civlizations)
+            {
+                <tr>
+                    <td>@civilization.name</td>
+                    <td>@civilization.expansion</td>
+                    <td>@civilization.army_type</td>
+                    <td>@civilization.team_bonus</td>
+                    <td>@string.Join(Environment.NewLine, civilization.civilization_bonus)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Civilization>? civlizations;
+
+    protected override async Task OnInitializedAsync()
+    {
+        civlizations = await Http.GetFromJsonAsync<List<Civilization>>("Civilizations");
+    }
+}

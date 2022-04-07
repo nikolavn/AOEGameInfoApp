@@ -1,0 +1,45 @@
+﻿@page "/unitslist"
+@using AOEGameInfo.App.Shared
+@inject HttpClient Http
+
+<PageTitle>Units</PageTitle>
+
+<h3>Units</h3>
+
+@if (units == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Introduced In</th>
+                <th>Avaible In</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var unit in units)
+            {
+                <tr>
+                    <td>@unit.name</td>
+                    <td>@unit.expansion</td>
+                    <td>@unit.age Age</td>
+                    <td>@unit.description</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Unit>? units;
+
+    protected override async Task OnInitializedAsync()
+    {
+        units = await Http.GetFromJsonAsync<List<Unit>>("Units");
+    }
+}
